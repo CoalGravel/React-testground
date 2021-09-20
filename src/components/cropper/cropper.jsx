@@ -8,11 +8,14 @@ import IconButton from '@mui/material/IconButton';
 import Cancel from '@mui/icons-material/Cancel';
 
 import { generateDownload } from '../../utils/cropImage';
+import { SnackbarContext } from '../snackbar/snackbar';
 
 export default function RenderCropper({ handleCropper }) {
   const inputRef = React.useRef();
 
   const triggerFileSelectPopup = () => inputRef.current.click();
+
+  const setStateSnackbarContext = React.useContext(SnackbarContext);
 
   const [image, setImage] = React.useState(null);
   const [croppedArea, setCroppedArea] = React.useState(null);
@@ -34,7 +37,24 @@ export default function RenderCropper({ handleCropper }) {
   };
 
   const onDownload = () => {
+    if (!image)
+      return setStateSnackbarContext(
+        true,
+        'Please select an image!',
+        'warning'
+      );
     generateDownload(image, croppedArea);
+  };
+
+  const onClear = () => {
+    if (!image)
+      return setStateSnackbarContext(
+        true,
+        'Please select an image!',
+        'warning'
+      );
+
+    setImage(null);
   };
 
   return (
@@ -86,7 +106,7 @@ export default function RenderCropper({ handleCropper }) {
           variant='contained'
           color='primary'
           style={{ marginRight: '5px', marginLeft: '5px' }}
-          onClick={() => setImage(null)}>
+          onClick={onClear}>
           Clear
         </Button>
         <Button
