@@ -9,14 +9,16 @@ import Cancel from '@mui/icons-material/Cancel';
 
 import getCroppedImg, { generateDownload } from '../../utils/cropImage';
 import { SnackbarContext } from '../snackbar/snackbar';
+import { BackdropContext } from '../backdrop/backdrop';
 import { dataURLtoFile } from '../../utils/dataURLtoFile';
 
-export default function RenderCropper({ handleCropper }) {
+export default function RenderCropper({ handleCropper, setAvatar }) {
   const inputRef = React.useRef();
 
   const triggerFileSelectPopup = () => inputRef.current.click();
 
   const setStateSnackbarContext = React.useContext(SnackbarContext);
+  const { closeBackdrop, showBackdrop } = React.useContext(BackdropContext);
 
   const [image, setImage] = React.useState(null);
   const [croppedArea, setCroppedArea] = React.useState(null);
@@ -78,6 +80,9 @@ export default function RenderCropper({ handleCropper }) {
     try {
       const formdata = new FormData();
       formdata.append('croppedImage', convertedUrlToFile);
+
+      showBackdrop();
+
       const res = await fetch('http://localhost:9000/api/users/setProfilePic', {
         method: 'POST',
         body: formdata
@@ -85,7 +90,10 @@ export default function RenderCropper({ handleCropper }) {
 
       const res2 = await res.json();
       console.log(res2);
+      closeBackdrop();
+      setAvatar(res2.data);
     } catch (err) {
+      closeBackdrop();
       console.warn(err);
     }
   };
