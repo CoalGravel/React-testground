@@ -7,8 +7,9 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Cancel from '@mui/icons-material/Cancel';
 
-import { generateDownload } from '../../utils/cropImage';
+import getCroppedImg, { generateDownload } from '../../utils/cropImage';
 import { SnackbarContext } from '../snackbar/snackbar';
+import { dataURLtoFile } from '../../utils/dataURLtoFile';
 
 export default function RenderCropper({ handleCropper }) {
   const inputRef = React.useRef();
@@ -55,6 +56,23 @@ export default function RenderCropper({ handleCropper }) {
       );
 
     setImage(null);
+  };
+
+  const onUpload = async () => {
+    if (!image)
+      return setStateSnackbarContext(
+        true,
+        'Please select an image!',
+        'warning'
+      );
+
+    const canvas = await getCroppedImg(image, croppedArea);
+    const canvasDataUrl = canvas.toDataURL('image/jpeg');
+    const convertedUrlToFile = dataURLtoFile(
+      canvasDataUrl,
+      'cropped-image.jpeg'
+    );
+    console.log(convertedUrlToFile);
   };
 
   return (
@@ -126,7 +144,8 @@ export default function RenderCropper({ handleCropper }) {
         <Button
           variant='contained'
           color='secondary'
-          style={{ marginRight: '5px', marginLeft: '5px' }}>
+          style={{ marginRight: '5px', marginLeft: '5px' }}
+          onClick={onUpload}>
           Upload
         </Button>
       </div>
