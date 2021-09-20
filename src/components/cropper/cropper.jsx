@@ -4,10 +4,12 @@ import './cropper.css';
 import Cropper from 'react-easy-crop';
 import Slider from '@mui/material/Slider';
 import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import Cancel from '@mui/icons-material/Cancel';
 
 import { generateDownload } from '../../utils/cropImage';
 
-export default function RenderCropper() {
+export default function RenderCropper({ handleCropper }) {
   const inputRef = React.useRef();
 
   const triggerFileSelectPopup = () => inputRef.current.click();
@@ -37,6 +39,13 @@ export default function RenderCropper() {
 
   return (
     <div className='container'>
+      <div className='cancel-button-container'>
+        <IconButton
+          style={{ marginRight: '10px', marginLeft: '10px' }}
+          onClick={handleCropper}>
+          <Cancel />
+        </IconButton>
+      </div>
       <div className='container-cropper'>
         {image ? (
           <>

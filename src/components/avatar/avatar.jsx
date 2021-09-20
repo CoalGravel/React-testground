@@ -10,6 +10,8 @@ import MenuItem from '@mui/material/MenuItem';
 import MenuList from '@mui/material/MenuList';
 import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
 
+import RenderCropper from '../cropper/cropper';
+
 export default function RenderAvatar() {
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef(null);
@@ -45,53 +47,66 @@ export default function RenderAvatar() {
     prevOpen.current = open;
   }, [open]);
 
-  return (
-    <div className='avatar-container'>
-      <div className='avatar'>
-        <img src='' alt='avatar' className='avatar-img' />
-      </div>
-      <div className='menu-button'>
-        <IconButton
-          ref={anchorRef}
-          id='composition-button'
-          aria-controls={open ? 'composition-menu' : undefined}
-          aria-expanded={open ? 'true' : undefined}
-          aria-haspopup='true'
-          onClick={handleToggle}>
-          <PhotoCameraIcon />
-        </IconButton>
+  const [showCropper, setShowCropper] = React.useState(false);
+  const handleCropper = () => setShowCropper((prevValue) => !prevValue);
 
-        <Popper
-          open={open}
-          anchorEl={anchorRef.current}
-          role={undefined}
-          placement='bottom-start'
-          transition
-          disablePortal>
-          {({ TransitionProps, placement }) => (
-            <Grow
-              {...TransitionProps}
-              style={{
-                transformOrigin:
-                  placement === 'bottom-start' ? 'left top' : 'left bottom'
-              }}>
-              <Paper>
-                <ClickAwayListener onClickAway={handleClose}>
-                  <MenuList
-                    autoFocusItem={open}
-                    id='composition-menu'
-                    aria-labelledby='composition-button'
-                    onKeyDown={handleListKeyDown}>
-                    <MenuItem onClick={handleClose}>View</MenuItem>
-                    <MenuItem onClick={handleClose}>Change</MenuItem>
-                    <MenuItem onClick={handleClose}>Remove</MenuItem>
-                  </MenuList>
-                </ClickAwayListener>
-              </Paper>
-            </Grow>
-          )}
-        </Popper>
+  return (
+    <>
+      <div className='avatar-container'>
+        <div className='avatar'>
+          <img src='' alt='avatar' className='avatar-img' />
+        </div>
+        <div className='menu-button'>
+          <IconButton
+            ref={anchorRef}
+            id='composition-button'
+            aria-controls={open ? 'composition-menu' : undefined}
+            aria-expanded={open ? 'true' : undefined}
+            aria-haspopup='true'
+            onClick={handleToggle}>
+            <PhotoCameraIcon />
+          </IconButton>
+
+          <Popper
+            open={open}
+            anchorEl={anchorRef.current}
+            role={undefined}
+            placement='bottom-start'
+            transition
+            disablePortal>
+            {({ TransitionProps, placement }) => (
+              <Grow
+                {...TransitionProps}
+                style={{
+                  transformOrigin:
+                    placement === 'bottom-start' ? 'left top' : 'left bottom'
+                }}>
+                <Paper>
+                  <ClickAwayListener onClickAway={handleClose}>
+                    <MenuList
+                      autoFocusItem={open}
+                      id='composition-menu'
+                      aria-labelledby='composition-button'
+                      onKeyDown={handleListKeyDown}>
+                      <MenuItem onClick={handleClose}>View</MenuItem>
+                      <MenuItem
+                        onClick={(event) => {
+                          handleCropper();
+                          handleClose(event);
+                        }}>
+                        Change
+                      </MenuItem>
+                      <MenuItem onClick={handleClose}>Remove</MenuItem>
+                    </MenuList>
+                  </ClickAwayListener>
+                </Paper>
+              </Grow>
+            )}
+          </Popper>
+        </div>
       </div>
-    </div>
+
+      {showCropper && <RenderCropper handleCropper={handleCropper} />}
+    </>
   );
 }
