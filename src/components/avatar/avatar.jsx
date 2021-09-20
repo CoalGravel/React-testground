@@ -50,46 +50,48 @@ export default function RenderAvatar() {
       <div className='avatar'>
         <img src='' alt='avatar' className='avatar-img' />
       </div>
-      <IconButton
-        ref={anchorRef}
-        id='composition-button'
-        aria-controls={open ? 'composition-menu' : undefined}
-        aria-expanded={open ? 'true' : undefined}
-        aria-haspopup='true'
-        onClick={handleToggle}>
-        <PhotoCameraIcon />
-      </IconButton>
+      <div className='menu-button'>
+        <IconButton
+          ref={anchorRef}
+          id='composition-button'
+          aria-controls={open ? 'composition-menu' : undefined}
+          aria-expanded={open ? 'true' : undefined}
+          aria-haspopup='true'
+          onClick={handleToggle}>
+          <PhotoCameraIcon />
+        </IconButton>
 
-      <Popper
-        open={open}
-        anchorEl={anchorRef.current}
-        role={undefined}
-        placement='bottom-start'
-        transition
-        disablePortal>
-        {({ TransitionProps, placement }) => (
-          <Grow
-            {...TransitionProps}
-            style={{
-              transformOrigin:
-                placement === 'bottom-start' ? 'left top' : 'left bottom'
-            }}>
-            <Paper>
-              <ClickAwayListener onClickAway={handleClose}>
-                <MenuList
-                  autoFocusItem={open}
-                  id='composition-menu'
-                  aria-labelledby='composition-button'
-                  onKeyDown={handleListKeyDown}>
-                  <MenuItem onClick={handleClose}>Profile</MenuItem>
-                  <MenuItem onClick={handleClose}>My account</MenuItem>
-                  <MenuItem onClick={handleClose}>Logout</MenuItem>
-                </MenuList>
-              </ClickAwayListener>
-            </Paper>
-          </Grow>
-        )}
-      </Popper>
+        <Popper
+          open={open}
+          anchorEl={anchorRef.current}
+          role={undefined}
+          placement='bottom-start'
+          transition
+          disablePortal>
+          {({ TransitionProps, placement }) => (
+            <Grow
+              {...TransitionProps}
+              style={{
+                transformOrigin:
+                  placement === 'bottom-start' ? 'left top' : 'left bottom'
+              }}>
+              <Paper>
+                <ClickAwayListener onClickAway={handleClose}>
+                  <MenuList
+                    autoFocusItem={open}
+                    id='composition-menu'
+                    aria-labelledby='composition-button'
+                    onKeyDown={handleListKeyDown}>
+                    <MenuItem onClick={handleClose}>View</MenuItem>
+                    <MenuItem onClick={handleClose}>Change</MenuItem>
+                    <MenuItem onClick={handleClose}>Remove</MenuItem>
+                  </MenuList>
+                </ClickAwayListener>
+              </Paper>
+            </Grow>
+          )}
+        </Popper>
+      </div>
     </div>
   );
 }
